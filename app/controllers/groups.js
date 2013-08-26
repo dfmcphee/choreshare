@@ -106,6 +106,10 @@ var Groups = function () {
       if (user && user.groups && user.groups.indexOf(params.id) !== -1) {
         geddy.model.Group.first(params.id, function(err, group) {
           geddy.model.User.all({groups: group.id}, function(err, members) {
+            var membersIndexed = {};
+            for (var i=0; i < members.length; i++) {
+              membersIndexed[members[i].id] = members[i];
+            }
             geddy.model.Task.all({groupId: group.id}, function(err, tasks) {
               if (!group) {
                 var err = new Error();
@@ -113,7 +117,7 @@ var Groups = function () {
                 self.error(err);
               }
               else {
-                self.respond({params: params, group: group, tasks: tasks, members: members});
+                self.respond({params: params, group: group, tasks: tasks, members: membersIndexed});
               }
             });
           });

@@ -1,9 +1,8 @@
-<div class="jumbotron">
-  <%- linkTo('<i class="icon-edit"></i>', editGroupPath(params.id), {class: "btn btn-default pull-right", _escapeContent: false}); %>
-  <h2 class="name"><%= group.name %></h2>
-  <input type="hidden" id="group-id" value="<%= group.id %>">
-  <input type="hidden" id="user-id" value="<%= session.get('userId') %>">
-</div>
+<%- linkTo('<i class="icon-edit"></i>', editGroupPath(params.id), {class: "btn btn-default pull-right", _escapeContent: false}); %>
+<h1 class="name"><%= group.name %></h1>
+<input type="hidden" id="group-id" value="<%= group.id %>">
+<input type="hidden" id="user-id" value="<%= session.get('userId') %>">
+<hr/>
 <div id="invite-errors">
 </div>
 <div class="row">
@@ -35,6 +34,13 @@
             <input type="checkbox" class="complete-task" <%= checked %>>
           </span>
           <input type="text" class="form-control" disabled value="<%= tasks[i].name %>">
+          <% if (tasks[i].assignedTo && tasks[i].assignedTo.length > 0) { %>
+            <% for (var x=0; x < tasks[i].assignedTo.length; x++) { %>
+              <span class="input-group-addon task-assigned-avatar">
+                <%- members[tasks[i].assignedTo[x]].getAvatar() %>
+              </span>
+            <% } %>
+          <% } %>
           <span class="input-group-btn">
             <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>
             <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>
@@ -54,10 +60,10 @@
       </span>
     </div>
     <hr/>
-    <% for (var i=0; i < members.length; i++) { %>
+    <% for (var i in members) { %>
       <div class="row">
         <div class="col-xs-2">
-          <i class="icon-user icon-lg"></i>
+          <%- members[i].getAvatar() %>
         </div>
         <div class="col-xs-10">
           <p><%= members[i].username %></p>
@@ -100,9 +106,12 @@ $(function () {
   });
   
   var userList = [];
-  <% for (var i=0; i < members.length; i++) { %>
+  var userAvatars = {};
+  <% for (var i in members) { %>
     userList.push("<%= members[i].username %>");
+    userAvatars["<%= members[i].id %>"] = '<%- members[i].getAvatar() %>';
   <% } %>
-  addGroupShowListeners(userList, socket);
+  
+  addGroupListeners(userList, socket, userAvatars);
 });
 </script>

@@ -2,10 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Chores</title>
+    <title>ChoreShare</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
 
     <!-- The HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -47,6 +47,21 @@
         <ul class="nav navbar-nav">
           <li><%- linkTo('Groups', groupsPath) %></li>
         </ul>
+        <% if (session.get('userId')) { %>
+        <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logged in <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/users/<%= session.get('userId') %>/edit">Edit Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </li>
+        <% } else { %>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login">Login</a></li>
+          </ul>
+        <% } %>
+      </ul>
       </div><!-- /.navbar-collapse -->
     </nav>
     <div class="container">

@@ -6,12 +6,30 @@
   font-size:2em;
 }
 
+img {
+  max-width: 100%;
+}
+
 .form-control[disabled] {
   cursor:default;
+  background-color: #FFFFFF;
 }
 
 .completed-task input[type=text] {
   text-decoration: line-through;
+}
+
+.task-assigned-avatar {
+  padding: 2px 4px;
+  width: 40px;
+}
+
+.task-assigned-avatar img {
+  width:25px;
+}
+
+.task-assigned-avatar i {
+  padding:5px;
 }
 
 .twitter-typeahead {

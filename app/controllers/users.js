@@ -44,7 +44,7 @@ var Users = function () {
             self.transfer('add');
           }
           else {
-            self.redirect({controller: self.name});
+            self.redirect('/groups');
           }
         });
       }
@@ -99,7 +99,7 @@ var Users = function () {
           params.errors = err;
           self.transfer('edit');
         } else {
-          self.redirect({controller: self.name});
+          self.redirect('/');
         }
       });
     });
@@ -113,7 +113,7 @@ var Users = function () {
         params.errors = err;
         self.transfer('edit');
       } else {
-        self.redirect({controller: self.name});
+        self.redirect('/');
       }
     });
   };

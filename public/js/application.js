@@ -44,7 +44,7 @@ var addGroupIndexListeners = function() {
 };
 
 // Events for Group show
-var addGroupShowListeners = function(userList, socket) {
+var addGroupListeners = function(userList, socket, userAvatars) {
   
   // Add instant search for tasks
   $('#task-filter').keyup(function() {
@@ -88,13 +88,22 @@ var addGroupShowListeners = function(userList, socket) {
       checked = ' checked="checked"';
       complete = ' completed-task';
     }
-
+    
+    var assignedUsers = '';
+    
+    if (task.assignedTo) {
+      for (var i=0; i < task.assignedTo.length; i++) {
+        assignedUsers +='<span class="input-group-addon task-assigned-avatar">' + userAvatars[task.assignedTo[i]] + '</span>';
+      } 
+    }
+    
     var template = [ ''
       , '<div id="task-' + task.id + '" class="input-group' + complete + '">'
       , '  <span class="input-group-addon">'
       , '    <input type="checkbox" class="complete-task"' + checked +'>'
       , '  </span>'
       , '  <input type="text" class="form-control" disabled value="' + task.name + '">'
+      , assignedUsers
       , '  <span class="input-group-btn">'
       , '    <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>'
       , '    <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>'
@@ -180,7 +189,7 @@ var addGroupShowListeners = function(userList, socket) {
     });
     
     $('#' + taskId + ' .edit-task').show();
-    $('#' + taskId + ' .task-action').show();
+    $('#' + taskId + ' .task-actions').show();
     $('#' + taskId + ' .done-editing').hide();
     $('#' + taskId + ' .delete-task').hide();
     $('#' + taskId + ' input[type="text"]').attr("disabled", "disabled");
@@ -191,7 +200,7 @@ var addGroupShowListeners = function(userList, socket) {
     var taskId = $(this).closest('.input-group').attr('id');
     var id = getTaskIdFromElementId(taskId);
     var editedName = $('#' + taskId + ' input[type="text"]').val();
-    
+    // DELETE task
     $.ajax({
         url: '/tasks/' + id,
         type: 'DELETE',
@@ -211,7 +220,7 @@ var addGroupShowListeners = function(userList, socket) {
     var id = getTaskIdFromElementId(taskId);
     
     var editedName = $('#' + taskId + ' input[type="text"]').val();
-    
+    // PUT updated task
     $.ajax({
         url: '/tasks/' + id,
         type: 'PUT',
@@ -223,6 +232,7 @@ var addGroupShowListeners = function(userList, socket) {
     });
   });
   
+  // Add typeahead for task assignment
   $('.typeahead').typeahead({                                   
     name: 'username',                                                             
     local: userList                                                              

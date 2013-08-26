@@ -24,8 +24,6 @@ _findOrCreateUser = function (passport, profile, callback) {
           else {
             user.addPassport(passport);
             user.save({force: true}, function (err, data) {
-            //console.dir(user);
-            //console.dir(passport);
               if (err) {
                 callback(err, null);
               }

@@ -107,6 +107,7 @@ var Tasks = function () {
               if (err) {
                 self.respond({params: params, success: false, errors: err}, {format: 'json'});
               } else {
+                geddy.io.sockets.in(task.groupId).emit('taskUpdated', task);
                 self.respond({params: params, success: true}, {format: 'json'});
               }
             });

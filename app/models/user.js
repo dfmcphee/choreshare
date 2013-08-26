@@ -14,6 +14,16 @@ var User = function () {
   this.validatesConfirmed('password', 'confirmPassword');
 
   this.hasMany('Passports');
+  
+  this.getAvatar = function () {
+    var avatar;
+    if (this.avatar) {
+      avatar = '<img src="' + this.avatar + '" />';
+    } else {
+      avatar = '<i class="icon-user"></i>';
+    }
+    return avatar;
+  };
 };
 
 User = geddy.model.register('User', User);

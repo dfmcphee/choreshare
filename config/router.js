@@ -49,8 +49,14 @@ router.get('/auth/facebook').to('Auth.facebook');
 router.get('/auth/facebook/callback').to('Auth.facebookCallback');
 router.get('/auth/yammer').to('Auth.yammer');
 router.get('/auth/yammer/callback').to('Auth.yammerCallback');
-router.resource('users');
 router.resource('groups');
+
+//router.match('/users/:id(.:format)','GET').to({controller: 'Users', action: 'show'});
+router.match('/users/:id/edit(.:format)','GET').to({controller: 'Users', action: 'edit'});
+router.match('/users(.:format)','POST').to({controller: 'Users', action: 'create'});
+router.match('/users/add(.:format)','GET').to({controller: 'Users', action: 'add'});
+router.match('/users/:id(.:format)','PUT').to({controller: 'Users', action: 'update'});
+router.match('/users/:id(.:format)','DELETE').to({controller: 'Users', action: 'destroy'});
 
 //router.match('/tasks/:id(.:format)','GET').to({controller: 'Tasks', action: 'show'});
 //router.match('/tasks/:id/edit(.:format)','GET').to({controller: 'Tasks', action: 'edit'});
