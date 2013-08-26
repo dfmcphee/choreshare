@@ -24,6 +24,10 @@ img {
   width: 40px;
 }
 
+#assignment-members img {
+  width: 25px;
+}
+
 .task-assigned-avatar img {
   width:25px;
 }

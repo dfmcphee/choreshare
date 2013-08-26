@@ -91,18 +91,16 @@ var Tasks = function () {
   
   this.assign = function (req, resp, params) {
     var self = this;
-    if (params.id && params.username) {
+    if (params.id) {
       geddy.model.Task.first(params.id, function(err, task) {
-        geddy.model.User.first({username: params.username}, function(err, user) {
-          if (!task.assignedTo) {
-            task.assignedTo = [];
-          }
-          if (!user){
-            self.respond({params: params, success: false, error: 'No user found with that username.'}, {format: 'json'});
-          } else if (task.assignedTo.indexOf(user.id) !== -1) {
-            self.respond({params: params, success: false, error: 'User is already assigned to task.'}, {format: 'json'});
+          if (!task){
+            self.respond({params: params, success: false, error: 'No task found with that id.'}, {format: 'json'});
           } else {
-            task.assignedTo.push(user.id);
+            if (params.assignedTo) {
+              task.assignedTo = params.assignedTo;
+            } else {
+              task.assignedTo = []; 
+            }
             task.save(function(err, data) {
               if (err) {
                 self.respond({params: params, success: false, errors: err}, {format: 'json'});
@@ -112,7 +110,6 @@ var Tasks = function () {
               }
             });
           }
-        });
       });
     } else {
       self.respond({params: params, success: false, error: 'Missing parameters.'}, {format: 'json'});

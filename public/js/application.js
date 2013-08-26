@@ -93,7 +93,7 @@ var addGroupListeners = function(userList, socket, userAvatars) {
     
     if (task.assignedTo) {
       for (var i=0; i < task.assignedTo.length; i++) {
-        assignedUsers +='<span class="input-group-addon task-assigned-avatar">' + userAvatars[task.assignedTo[i]] + '</span>';
+        assignedUsers +='<span class="input-group-addon task-assigned-avatar" data-user-id="' + task.assignedTo[i] + '">' + userAvatars[task.assignedTo[i]] + '</span>';
       } 
     }
     
@@ -243,20 +243,29 @@ var addGroupListeners = function(userList, socket, userAvatars) {
     var taskId = $(this).closest('.input-group').attr('id');
     var id = getTaskIdFromElementId(taskId);
     $('#assign-task-id').val(id);
+    $('#' + taskId + ' .task-assigned-avatar').each(function(index) {
+      var memberId = $(this).attr('data-user-id');
+      $('#member-'  + memberId + ' .assign-task-member').prop('checked', true);
+    });
   });
   
   $(".container").on("click", "#submit-assign-task", function(event){
-    var username = $('#assign-username').val();
+    var assignedUsers = [];
+    
+    $('.assign-task-member').each(function(index) {
+      if ($(this).is(':checked')) {
+        assignedUsers.push($(this).val());
+      }
+    });
+    
     var id = $('#assign-task-id').val();
+    
     $.ajax({
         url: '/tasks/' + id + '/assign',
         type: 'PUT',
-        data: { username: username },
+        data: { assignedTo: assignedUsers},
         success: function(result) {
             if (result.success) {
-              $('#assign-errors').html('');
-              $('#assign-username').val('');
-              $('#assign-task-id').val('');
               $('#assign-modal').modal('hide')
             } else {
               var errorMessage = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' + result.error + '</div>';
@@ -265,6 +274,14 @@ var addGroupListeners = function(userList, socket, userAvatars) {
         }
     });
   });
+  
+  $('#assign-modal').on('hide.bs.modal', function () {
+    $('#assign-errors').html('');
+    $('.assign-task-member').each(function(index) {
+      $(this).prop('checked', false);
+    });
+    $('#assign-task-id').val('');
+  })
 };
 
 

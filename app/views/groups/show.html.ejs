@@ -36,7 +36,7 @@
           <input type="text" class="form-control" disabled value="<%= tasks[i].name %>">
           <% if (tasks[i].assignedTo && tasks[i].assignedTo.length > 0) { %>
             <% for (var x=0; x < tasks[i].assignedTo.length; x++) { %>
-              <span class="input-group-addon task-assigned-avatar">
+              <span class="input-group-addon task-assigned-avatar" data-user-id="<%= tasks[i].assignedTo[x] %>">
                 <%- members[tasks[i].assignedTo[x]].getAvatar() %>
               </span>
             <% } %>
@@ -82,10 +82,20 @@
         <h4 class="modal-title">Assign task to user</h4>
       </div>
       <div class="modal-body">
-        <div class="control-group">
+        <div id="assignment-members" class="control-group">
           <div id="assign-errors">
           </div>
-          <input id="assign-username" type="text" class="typeahead form-control" placeholder="Search for a user...">
+          <% for (var i in members) { %>
+            <div id="member-<%= members[i].id %>" class="input-group" class="member-to-assign">
+                <span class="input-group-addon task-assigned-avatar">
+                  <%- members[i].getAvatar() %>
+                </span>
+                <input type="text" class="form-control" disabled value="<%= members[i].username %>">
+                <span class="input-group-addon">
+                  <input type="checkbox" class="assign-task-member" value="<%= members[i].id %>">
+                </span>    
+            </div>
+          <% } %>
           <input id="assign-task-id" type="hidden" value="">
         </div>
       </div>
