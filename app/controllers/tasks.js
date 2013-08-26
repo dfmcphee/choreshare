@@ -30,6 +30,7 @@ var Tasks = function () {
           self.respond({params: params, success: false, error: err}, {format: 'json'});
         }
         else {
+          geddy.io.sockets.in(task.groupId).emit('taskCreated', task);
           self.respond({params: params, success: true}, {format: 'json'});
         }
       });
@@ -80,6 +81,7 @@ var Tasks = function () {
             self.respond({params: params, success: false, errors: err}, {format: 'json'});
           }
           else {
+            geddy.io.sockets.in(task.groupId).emit('taskUpdated', task);
             self.respond({params: params, success: true}, {format: 'json'});
           }
         });
@@ -118,14 +120,17 @@ var Tasks = function () {
 
   this.destroy = function (req, resp, params) {
     var self = this;
-
-    geddy.model.Task.remove(params.id, function(err) {
-      if (err) {
-        self.respond({params: params, success: false, errors: err}, {format: 'json'});
-      }
-      else {
-        self.respond({params: params, success: true}, {format: 'json'});
-      }
+    geddy.model.Task.first(params.id, function(err, task) {
+      var groupId = task.groupId;
+      geddy.model.Task.remove(params.id, function(err) {
+        if (err) {
+          self.respond({params: params, success: false, errors: err}, {format: 'json'});
+        }
+        else {
+          geddy.io.sockets.in(groupId).emit('taskDeleted', task);
+          self.respond({params: params, success: true}, {format: 'json'});
+        }
+      });
     });
   };
 };

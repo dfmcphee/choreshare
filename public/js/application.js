@@ -44,7 +44,7 @@ var addGroupIndexListeners = function() {
 };
 
 // Events for Group show
-var addGroupShowListeners = function(userList) {
+var addGroupShowListeners = function(userList, socket) {
   
   // Add instant search for tasks
   $('#task-filter').keyup(function() {
@@ -119,17 +119,17 @@ var addGroupShowListeners = function(userList) {
       $('#task-' + task.id).replaceWith(renderTemplate(task));
     };
 
-    this.remove = function (taskId) {
-      console.log(taskId);
-      $('#task-' + taskId).remove();
+    this.remove = function (task) {
+      console.log(task.id);
+      $('#task-' + task.id).remove();
     };
 
   };
   geddy.Tasks = new TasksController();
 
-  geddy.model.Task.on('save'   , geddy.Tasks.create);
-  geddy.model.Task.on('update' , geddy.Tasks.update);
-  geddy.model.Task.on('remove' , geddy.Tasks.remove);
+  socket.on('taskCreated', geddy.Tasks.create);
+  socket.on('taskUpdated', geddy.Tasks.update);
+  socket.on('taskDeleted', geddy.Tasks.remove);
   
   var postTask = function() {
     var saveUrl = '/tasks.json'

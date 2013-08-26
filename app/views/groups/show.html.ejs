@@ -90,13 +90,19 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 <script type="text/javascript">
 $(function () {
+  var socket = geddy.io.connect();
+  var room = "<%= group.id %>";
+  socket.on('connect', function() {
+     // Connected, let's sign-up for to receive messages for this room
+     socket.emit('room', room);
+  });
+  
   var userList = [];
   <% for (var i=0; i < members.length; i++) { %>
     userList.push("<%= members[i].username %>");
   <% } %>
-  addGroupShowListeners(userList);
+  addGroupShowListeners(userList, socket);
 });
 </script>
