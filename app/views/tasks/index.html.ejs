@@ -1,0 +1,57 @@
+<div class="hero-unit">
+  <%- linkTo('<i class="icon-plus"></i>', addTaskPath, {class: 'btn btn-default pull-right', _escapeContent: false}); %>
+  <h2>All Tasks</h2>
+</div>
+
+<div id="tasks-list">
+<% if (tasks) { %>
+<% for (var i = 0, ii = tasks.length; i < ii; i++) { %>
+  <div class="row" id="task-<%= tasks[i].id; %>">
+    <div class="col-md-12">
+      <h3><%- linkTo(tasks[i].name, taskPath(tasks[i].id)); %></h3>
+    </div>
+  </div>
+<% } %>
+<% } %>
+</div>
+
+<script type="text/javascript">
+$(function () {
+  geddy.io.addListenersForModels(['Task']);
+
+  var renderTemplate = function (task) {
+    var template = [ ''
+      , '<div class="row" id="task-' + task.id + '">'
+      , '  <div class="col-md-12">'
+      , '    <h3><a href="/tasks/' + task.id + '">' + task.name + '</a></h3>'
+      , '  </div>'
+      , '</div>'
+    ].join('');
+
+    return $(template);
+  }
+
+  var TasksController = function (opts) {
+    this.options = opts || {};
+
+    this.create = function (task) {
+      $('#tasks-list').append(renderTemplate(task));
+    };
+
+    this.update = function (task) {
+      $('#task-' + task.id).replaceWith(renderTemplate(task));
+    };
+
+    this.remove = function (task) {
+      console.log(task);
+      $('#task-' + task.id).remove();
+    };
+
+  };
+  geddy.Tasks = new TasksController();
+
+  geddy.model.Task.on('save'   , geddy.Tasks.create);
+  geddy.model.Task.on('update' , geddy.Tasks.update);
+  geddy.model.Task.on('remove' , geddy.Tasks.remove);
+});
+</script>

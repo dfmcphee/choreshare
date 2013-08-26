@@ -1,0 +1,14 @@
+<!-- Lets talk about geddy -->
+<div class="hero-unit geddy-welcome-box">
+  <% if (user) { %>
+    <h1>
+      Hello<% if (user.givenName) { %>, <%= user.givenName %><% } %>
+    </h1>
+    <p>You've successfully logged in to ChoreShare(via <%= authType %>).</p>
+    <p><%- linkTo('Click here to log back out', logoutPath) %></p>
+  <% } else { %>
+    <h1>Hello, stranger</h1>
+    <p>You're not logged in.</p>
+    <p><%- linkTo('Login', loginPath) %> or <%- linkTo('create and account', addUserPath) %>.</p>
+  <% } %>
+</div>

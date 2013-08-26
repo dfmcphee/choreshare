@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-12">
+    <%- linkTo('<i class="icon-plus"></i>', addGroupPath, {class: 'btn btn-default pull-right', _escapeContent: false}); %>
+    <h2>My Groups</h2>
+  </div>
+</div>
+
+<div id="groups-list">
+<% if (groups && groups.length > 0) { %>
+  <% for (var i = 0, ii = groups.length; i < ii; i++) { %>
+    <div class="row" id="group-<%= groups[i].id; %>">
+      <div class="col-12">
+        <h3><%- linkTo(groups[i].name, groupPath(groups[i].id)); %></h3>
+      </div>
+    </div>
+  <% } %>
+<% } else { %>
+  <div class="row">
+      <div class="col-12">
+        <p class="lead">You don't have any groups yet.</p>
+      </div>
+  </div>
+<% } %>
+</div>
+
+<script type="text/javascript">
+$(function () {
+  addGroupListeners();
+});
+</script>

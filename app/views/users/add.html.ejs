@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <form id="user-form" role="form" action="<%= usersPath %>" method="POST">
+      <fieldset>
+        <legend>Create a new User</legend>
+        <% if(params.errors) { %>
+        <div class="form-group">
+          <% for(var err in params.errors) { %>
+            <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= params.errors[err]; %></div>
+          <% } %>
+        </div>
+        <% } %>
+        <%= partial('_form', {user: params}); %>
+        <div class="form-actions">
+          <%- contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'}) %>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <form id="task-form" role="form" action="/tasks" method="POST">
+      <fieldset>
+        <legend>Create a new Task</legend>
+        <% if(params.errors) { %>
+        <div class="form-group">
+          <% for(var err in params.errors) { %>
+            <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><%= params.errors[err]; %></div>
+          <% } %>
+        </div>
+        <% } %>
+  
+        <%- partial('form', {task: {}}) %>
+  
+        <div class="form-actions well">
+          <%- contentTag('input', 'Add', {type: 'submit', class: 'btn btn-primary'}) %>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

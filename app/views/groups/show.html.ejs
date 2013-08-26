@@ -1,0 +1,102 @@
+<div class="jumbotron">
+  <%- linkTo('<i class="icon-edit"></i>', editGroupPath(params.id), {class: "btn btn-default pull-right", _escapeContent: false}); %>
+  <h2 class="name"><%= group.name %></h2>
+  <input type="hidden" id="group-id" value="<%= group.id %>">
+  <input type="hidden" id="user-id" value="<%= session.get('userId') %>">
+</div>
+<div id="invite-errors">
+</div>
+<div class="row">
+  <div class="col-sm-8">
+    <h2>Tasks</h2>
+    <div class="input-group">
+      <input type="text" class="form-control" id="task-name" placeholder="Enter a new task...">
+      <span class="input-group-btn">
+        <button id="add-task" class="btn btn-default" type="button"><i class="icon-plus"></i></button>
+      </span>
+    </div>
+    <hr/>
+    <div class="input-group">
+      <span class="input-group-addon"><i class="icon-search"></i></span>
+      <input type="text" class="form-control" id="task-filter" placeholder="Enter task name...">
+    </div>
+    <div id="tasks-list">
+      <% for (var i=0; i < tasks.length; i++) { %>
+        <% 
+          var checked = ''
+          , complete = '';
+          if (tasks[i].complete) {
+              checked = ' checked="checked"';
+              complete = ' completed-task';
+          }
+        %>
+        <div id="task-<%= tasks[i].id; %>" class="input-group <%= complete %>">
+          <span class="input-group-addon">
+            <input type="checkbox" class="complete-task" <%= checked %>>
+          </span>
+          <input type="text" class="form-control" disabled value="<%= tasks[i].name %>">
+          <span class="input-group-btn">
+            <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>
+            <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>
+            <button class="done-editing btn btn-success" style="display:none" type="button"><i class="icon-check"></i></button>
+            <button class="delete-task btn btn-danger" style="display:none" type="button"><i class="icon-remove-circle"></i></button>
+          </span>
+        </div>
+      <% } %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <h2>Members</h2>
+    <div class="input-group">
+      <input type="text" class="form-control" id="invite-email" placeholder="Email Address">
+      <span class="input-group-btn">
+          <button id="invite-user" class="btn btn-primary" type="button">Invite</button>
+      </span>
+    </div>
+    <hr/>
+    <% for (var i=0; i < members.length; i++) { %>
+      <div class="row">
+        <div class="col-xs-2">
+          <i class="icon-user icon-lg"></i>
+        </div>
+        <div class="col-xs-10">
+          <p><%= members[i].username %></p>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Assign Modal -->
+<div class="modal fade" id="assign-modal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Assign task to user</h4>
+      </div>
+      <div class="modal-body">
+        <div class="control-group">
+          <div id="assign-errors">
+          </div>
+          <input id="assign-username" type="text" class="typeahead form-control" placeholder="Search for a user...">
+          <input id="assign-task-id" type="hidden" value="">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="submit-assign-task" type="button" class="btn btn-primary">Assign</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+$(function () {
+  var userList = [];
+  <% for (var i=0; i < members.length; i++) { %>
+    userList.push("<%= members[i].username %>");
+  <% } %>
+  addGroupShowListeners(userList);
+});
+</script>
