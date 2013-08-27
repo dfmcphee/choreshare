@@ -27,7 +27,7 @@ var sendGroupInvite = function(email, user, group, token) {
             geddy.smtpTransport.sendMail({
               from: 'ChoreShare <choreshare@gmail.com>',
               to: locals.email,
-              subject: 'You have been invited to join a group on Duties App!',
+              subject: 'You have been invited to join a group on ChoreShare!',
               html: html,
               text: text
             }, function(err, responseStatus) {
