@@ -3,6 +3,16 @@ var nodemailer = require("nodemailer");
 // Create reusable transport method (opens pool of SMTP connections)
 geddy.smtpTransport = nodemailer.createTransport("SMTP", geddy.config.mailer);
 
+geddy.getFormattedDate = function (date) {
+  var dateString = '';
+  if (date) {
+    dateString = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+  }
+  return dateString;
+};
+
+geddy.moment = require("moment");
+
 var init = function(cb) {
   // Add uncaught-exception handler in prod-like environments
   if (geddy.config.environment != 'development') {

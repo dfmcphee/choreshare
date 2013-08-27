@@ -21,25 +21,7 @@ var router = new geddy.RegExpRouter();
 
 router.get('/').to('Main.index');
 
-// Basic routes
-// router.match('/moving/pictures/:id', 'GET').to('Moving.pictures');
-//
-// router.match('/farewells/:farewelltype/kings/:kingid', 'GET').to('Farewells.kings');
-//
-// Can also match specific HTTP methods only
-// router.get('/xandadu').to('Xanadu.specialHandler');
-// router.del('/xandadu/:id').to('Xanadu.killItWithFire');
-//
-// Resource-based routes
-// router.resource('hemispheres');
-//
-// Nested Resource-based routes
-// router.resource('hemispheres', function(){
-//   this.resource('countries');
-//   this.get('/print(.:format)').to('Hemispheres.print');
-// });
-
-
+// Auth Routes
 router.get('/login').to('Main.login');
 router.get('/logout').to('Main.logout');
 router.post('/auth/local').to('Auth.local');
@@ -49,24 +31,24 @@ router.get('/auth/facebook').to('Auth.facebook');
 router.get('/auth/facebook/callback').to('Auth.facebookCallback');
 router.get('/auth/yammer').to('Auth.yammer');
 router.get('/auth/yammer/callback').to('Auth.yammerCallback');
-router.resource('groups');
 
-//router.match('/users/:id(.:format)','GET').to({controller: 'Users', action: 'show'});
+// Group Routes
+router.resource('groups');
+router.get('/invite').to('Groups.invite');
+router.get('/accept-invite').to('Groups.accept');
+
+// User Routes
 router.match('/users/:id/edit(.:format)','GET').to({controller: 'Users', action: 'edit'});
 router.match('/users(.:format)','POST').to({controller: 'Users', action: 'create'});
 router.match('/users/add(.:format)','GET').to({controller: 'Users', action: 'add'});
 router.match('/users/:id(.:format)','PUT').to({controller: 'Users', action: 'update'});
 router.match('/users/:id(.:format)','DELETE').to({controller: 'Users', action: 'destroy'});
 
-//router.match('/tasks/:id(.:format)','GET').to({controller: 'Tasks', action: 'show'});
-//router.match('/tasks/:id/edit(.:format)','GET').to({controller: 'Tasks', action: 'edit'});
+// Task Routes
 router.match('/tasks(.:format)','POST').to({controller: 'Tasks', action: 'create'});
-//router.match('/tasks/add(.:format)','GET').to({controller: 'Tasks', action: 'add'});
 router.match('/tasks/:id(.:format)','PUT').to({controller: 'Tasks', action: 'update'});
 router.match('/tasks/:id/assign(.:format)','PUT').to({controller: 'Tasks', action: 'assign'});
+router.match('/tasks/:id/set-date(.:format)','PUT').to({controller: 'Tasks', action: 'setDate'});
 router.match('/tasks/:id(.:format)','DELETE').to({controller: 'Tasks', action: 'destroy'});
-
-router.get('/invite').to('Groups.invite');
-router.get('/accept-invite').to('Groups.accept');
 
 exports.router = router;

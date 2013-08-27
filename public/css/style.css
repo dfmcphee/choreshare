@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.hidden {
+  display:none;
+}
+
 .icon-lg {
   font-size:2em;
 }
@@ -10,9 +14,54 @@ img {
   max-width: 100%;
 }
 
+.navbar.navbar-inverse {
+  background: #428bca;
+  border: #428bca;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+  color: #ffffff;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+  background: #428bca;
+}
+
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:hover, .navbar-inverse .navbar-nav>.open>a:focus {
+  background-color: #3D7CB3;
+  color: #ffffff;
+}
+
+.datepicker table {
+  width: 100%;
+}
+
+#due-date-modal .icon-calendar {
+  font-size:1.2em;
+}
+
+.past-due {
+  background: #f0ad4e;
+  border: #f0ad4e;
+  color: #eee;
+}
+
+.completed-task .past-due {
+  display:none;
+}
+
 .form-control[disabled] {
   cursor:default;
   background-color: #FFFFFF;
+  -webkit-text-fill-color: #6b6b6b;
+}
+
+.datepicker.dropdown-menu {
+  z-index: 99999;
 }
 
 .completed-task input[type=text] {

@@ -1,4 +1,5 @@
-var passport = require('../helpers/passport');
+var passport = require('../helpers/passport')
+, moment = require('moment');
 
 var Tasks = function () {
   this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
@@ -113,6 +114,35 @@ var Tasks = function () {
       });
     } else {
       self.respond({params: params, success: false, error: 'Missing parameters.'}, {format: 'json'});
+    }
+  };
+  
+  this.setDate = function (req, resp, params) {
+    var self = this;
+    
+    if (params.id && params.dueDate && moment(params.dueDate).isValid()) {
+      geddy.model.Task.first(params.id, function(err, task) {
+        geddy.model.User.first(self.session.get('userId'), function(err, user) {
+            if (!task){
+              self.respond({params: params, success: false, error: 'No task found with that id.'}, {format: 'json'});
+            } else if (user.groups.indexOf(task.groupId) === -1){
+              self.respond({params: params, success: false, error: 'You are not in the group that task belongs to.'}, {format: 'json'});
+            } else {
+              task.dueDate = params.dueDate;
+              
+              task.save(function(err, data) {
+                if (err) {
+                  self.respond({params: params, success: false, errors: err}, {format: 'json'});
+                } else {
+                  geddy.io.sockets.in(task.groupId).emit('taskUpdated', task);
+                  self.respond({params: params, success: true}, {format: 'json'});
+                }
+              });
+            }
+        });
+      });
+    } else {
+      self.respond({params: params, success: false, error: 'Invalid parameters.'}, {format: 'json'});
     }
   };
 

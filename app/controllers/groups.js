@@ -110,7 +110,25 @@ var Groups = function () {
             for (var i=0; i < members.length; i++) {
               membersIndexed[members[i].id] = members[i];
             }
-            geddy.model.Task.all({groupId: group.id}, function(err, tasks) {
+            geddy.model.Task.all({groupId: group.id}, {sort: {dueDate: 'asc', complete: 'asc'}}, function(err, tasks) {
+              for (var i=0; i < tasks.length; i++) {
+                tasks[i].checked = ''
+                tasks[i].completeClass = ''
+                tasks[i].formattedDate = ''
+                tasks[i].dueIcon = '';
+                if (tasks[i].complete) {
+                    tasks[i].checked = ' checked="checked"';
+                    tasks[i].completeClass = ' completed-task';
+                }
+                if (tasks[i].dueDate && geddy.moment(tasks[i].dueDate).isValid()) {
+                  var m = geddy.moment(tasks[i].dueDate);
+                  tasks[i].formattedDate = m.format('MM-DD-YYYY');
+                  var tomorrow = geddy.moment().add('d', 1);
+                  if (m.isBefore(tomorrow)) {
+                    tasks[i].dueIcon = '<span class="input-group-addon past-due"><span class="past-due" data-toggle="tooltip" title="This task is due soon."><i class="icon-exclamation"></i></span></span>';
+                  }
+                }
+              }
               if (!group) {
                 var err = new Error();
                 err.statusCode = 404;
