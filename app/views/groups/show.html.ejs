@@ -36,19 +36,21 @@
               </span>
             <% } %>
           <% } %>
-          <%- tasks[i].dueIcon %>
           <span class="input-group-btn">
             <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>
             <button data-toggle="modal" href="#due-date-modal" class="set-due-date btn btn-default" data-due-date="<%= tasks[i].formattedDate %>"><i class="icon-calendar"></i></button>
             <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>
             <button class="done-editing btn btn-success" style="display:none" type="button"><i class="icon-check"></i></button>
             <button class="delete-task btn btn-danger" style="display:none" type="button"><i class="icon-remove-circle"></i></button>
+            <span class="position-relative">
+              <%- tasks[i].dueIcon %>
+            </span>
           </span>
         </div>
       <% } %>
     </div>
   </div>
-  <div class="col-sm-4">
+  <div id="group-members" class="col-sm-4">
     <h2>Members</h2>
     <div class="input-group">
       <input type="text" class="form-control" id="invite-email" placeholder="Email Address">
@@ -131,7 +133,7 @@
 </div><!-- /.modal -->
 <script type="text/javascript">
 $(function () {
-  var socket = geddy.io.connect();
+  var socket = geddy.io.connect("http://<%= geddy.config.externalURL %>");
   var room = "<%= group.id %>";
   socket.on('connect', function() {
      // Connected, let's sign-up for to receive messages for this room

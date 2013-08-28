@@ -116,8 +116,11 @@ var addGroupListeners = function(userList, socket, userAvatars) {
       var m = moment(task.dueDate);
       dueDate = m.format('MM-DD-YYYY');
       var tomorrow = moment().add('d', 1);
-      if (m.isBefore(tomorrow)) {
-        dueIcon = '<span class="input-group-addon past-due"><span class="past-due" data-toggle="tooltip" title="This task is due soon."><i class="icon-exclamation"></i></span></span>';
+      if (m.isBefore(moment())) {
+        dueIcon = '<span class="past-due" data-toggle="tooltip" title="This task is past due."><i class="icon-exclamation-sign"></i></span>';
+      }
+      else if (m.isBefore(tomorrow)) {
+        dueIcon = '<span class="near-due" data-toggle="tooltip" title="This task is due soon."><i class="icon-exclamation-sign"></i></span>';
       }
     }
     
@@ -128,13 +131,15 @@ var addGroupListeners = function(userList, socket, userAvatars) {
       , '  </span>'
       , '  <input type="text" class="form-control" disabled value="' + task.name + '">'
       , assignedUsers
-      , dueIcon
       , '  <span class="input-group-btn">'
       , '    <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>'
       , '    <button data-toggle="modal" href="#due-date-modal" class="set-due-date btn btn-default" data-due-date="' + dueDate + '"><i class="icon-calendar"></i></button>'
       , '    <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>'
       , '    <button class="done-editing btn btn-success" style="display:none" type="button"><i class="icon-check"></i></button>'
       , '    <button class="delete-task btn btn-danger" style="display:none" type="button"><i class="icon-remove-circle"></i></button>'
+      , '     <span class="position-relative">'
+      ,         dueIcon
+      , '     </span>'
       , '  </span>'
       , '</div>'
     ].join('');
@@ -191,6 +196,7 @@ var addGroupListeners = function(userList, socket, userAvatars) {
   // Add event for editing tasks
   $(".container").on("click", ".edit-task", function(event){
     var taskId = $(this).closest('.input-group').attr('id');
+    $('#' + taskId + ' .task-assigned-avatar').hide();
     $('#' + taskId + ' .edit-task').hide();
     $('#' + taskId + ' .task-actions').hide();
     $('#' + taskId + ' .set-due-date').hide();
@@ -215,6 +221,7 @@ var addGroupListeners = function(userList, socket, userAvatars) {
         }
     });
     
+    $('#' + taskId + ' .task-assigned-avatar').show();
     $('#' + taskId + ' .edit-task').show();
     $('#' + taskId + ' .task-actions').show();
     $('#' + taskId + ' .set-due-date').show();

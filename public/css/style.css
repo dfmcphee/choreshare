@@ -6,6 +6,10 @@
   display:none;
 }
 
+.position-relative {
+  position: relative;
+}
+
 .icon-lg {
   font-size:2em;
 }
@@ -36,6 +40,27 @@ img {
   color: #ffffff;
 }
 
+.navbar-inverse .navbar-toggle {
+  border-color: #3D7CB3;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+  border-color: #3D7CB3;
+}
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+  background-color: #3D7CB3;
+}
+
+.navbar-inverse .navbar-nav>.dropdown>a .caret {
+  border-top-color: #eeeeee;
+  border-bottom-color: #eeeeee;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+  color: #eeeeee;
+}
+
 .datepicker table {
   width: 100%;
 }
@@ -45,12 +70,20 @@ img {
 }
 
 .past-due {
-  background: #f0ad4e;
-  border: #f0ad4e;
-  color: #eee;
+  color: #d43f3a;
+  position: absolute;
+  left: 3px;
+  top: 0px;
 }
 
-.completed-task .past-due {
+.near-due {
+  color: #f0ad4e;
+  position: absolute;
+  left: 3px;
+  top: 0px;
+}
+
+.completed-task .past-due, .completed-task .near-due {
   display:none;
 }
 
@@ -69,8 +102,9 @@ img {
 }
 
 .task-assigned-avatar {
-  padding: 2px 4px;
-  width: 40px;
+  padding: 0px;
+  margin: 0px;
+  width: 34px;
 }
 
 #assignment-members img {
@@ -78,11 +112,22 @@ img {
 }
 
 .task-assigned-avatar img {
-  width:25px;
+  width: 32px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .task-assigned-avatar i {
-  padding:5px;
+  padding: 5px;
+  font-size: 1.4em;
+}
+
+#group-members .icon-user {
+  font-size: 1.4em;
+}
+
+#group-members .col-xs-2 {
+  text-align: center;
 }
 
 .twitter-typeahead {
@@ -136,4 +181,10 @@ img {
 }
 .tt-suggestion p {
 	margin: 0;
+}
+
+@media (max-width: 767px) {
+  #tasks-list {
+    width:95%;
+  }
 }
