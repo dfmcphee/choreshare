@@ -57,10 +57,6 @@ img {
   border-bottom-color: #eeeeee;
 }
 
-.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
-  color: #eeeeee;
-}
-
 .datepicker table {
   width: 100%;
 }
@@ -184,6 +180,9 @@ img {
 }
 
 @media (max-width: 767px) {
+  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+    color: #eeeeee;
+  }
   #tasks-list {
     width:95%;
   }
