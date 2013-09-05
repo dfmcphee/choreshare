@@ -22,6 +22,7 @@ var config = {
 , hostname: null
 , port: 4000
 , externalURL: 'localhost:4000'
+, socketURL: 'localhost:4000'
 , model: {
     defaultAdapter: 'mongo'
   }

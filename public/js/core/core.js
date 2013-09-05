@@ -10266,7 +10266,7 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     var options = this.socket.options;
 
     return this.scheme() + '://'
-      + options.host + ':' + options.port + '/'
+      + socketURL + '/'
       + options.resource + '/' + io.protocol
       + '/' + this.name + '/' + this.sessid;
   };

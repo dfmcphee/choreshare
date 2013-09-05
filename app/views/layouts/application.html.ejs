@@ -11,7 +11,9 @@
     <!--[if lt IE 9]>
       <%- scriptLink('http://html5shim.googlecode.com/svn/trunk/html5.js', {type:'text/javascript'}) %>
     <![endif]-->
-
+    <script>
+      var socketURL = "<%= geddy.config.socketURL %>";
+    </script>
     <%- scriptLink('/js/jquery.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('/js/moment.min.js', {type: 'text/javascript'}) %>

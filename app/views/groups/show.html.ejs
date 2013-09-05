@@ -133,7 +133,7 @@
 </div><!-- /.modal -->
 <script type="text/javascript">
 $(function () {
-  var socket = geddy.io.connect("http://<%= geddy.config.externalURL %>");
+  var socket = geddy.io.connect("http://<%= geddy.config.socketURL %>");
   var room = "<%= group.id %>";
   socket.on('connect', function() {
      // Connected, let's sign-up for to receive messages for this room
