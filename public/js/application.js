@@ -325,7 +325,7 @@ var addGroupListeners = function(userList, socket, userAvatars) {
     $('#repeat-input-group .input-group').removeClass('has-error');
     $('#repeat-input-group .input-group').removeClass('has-success');
     
-    if (interval && interval !== 'undefined' && interval !== '' && interval !== 'false') {
+    if (interval && interval !== 'undefined' && interval !== 'null' && interval !== 'false' && interval !== '') {
       $('#repeat-interval').val(interval);
       $('#repeat-input-group').show();
       $('#repeat-task').prop('checked', true);
