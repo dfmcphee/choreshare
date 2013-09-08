@@ -49,6 +49,7 @@ router.match('/tasks(.:format)','POST').to({controller: 'Tasks', action: 'create
 router.match('/tasks/:id(.:format)','PUT').to({controller: 'Tasks', action: 'update'});
 router.match('/tasks/:id/assign(.:format)','PUT').to({controller: 'Tasks', action: 'assign'});
 router.match('/tasks/:id/set-date(.:format)','PUT').to({controller: 'Tasks', action: 'setDate'});
+router.match('/tasks/check-interval(.:format)','GET').to({controller: 'Tasks', action: 'checkInterval'});
 router.match('/tasks/:id(.:format)','DELETE').to({controller: 'Tasks', action: 'destroy'});
 
 exports.router = router;

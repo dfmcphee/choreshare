@@ -1,4 +1,5 @@
 var passport = require('../helpers/passport')
+, later = require('later')
 , moment = require('moment');
 
 var Tasks = function () {
@@ -77,6 +78,38 @@ var Tasks = function () {
         self.respond({params: params, success: false, errors: task.errors}, {format: 'json'});
       }
       else {
+        // If completing a repeated task
+        if (task.complete && task.repeat) {
+          console.log('Creating repeat task.');
+          var m = moment(task.dueDate);
+          console.log(m);
+          var start = m.toDate();
+          console.log(start);
+          
+          var sched = later.parse.text(task.repeat);
+          console.log(sched);
+          console.log(sched.schedules);
+          
+          var newDueDate = later.schedule(sched).next(2, start);
+          console.log(newDueDate[newDueDate.length - 1]);
+          
+          var taskParams = {groupId: task.groupId, name: task.name, complete:false, repeat: task.repeat, dueDate: newDueDate[newDueDate.length - 1]};
+          var newTask = geddy.model.Task.create(taskParams);
+          
+          if (!newTask.isValid()) {
+            console.log('Invalid task params.');
+          }
+          
+          newTask.save(function(err, data) {
+            if (err) {
+              console.log('Error creating repeat task.');
+            }
+            else {
+              console.log('Repeat task created and saved.');
+              geddy.io.sockets.in(task.groupId).emit('taskCreated', newTask);
+            }
+          });
+        }
         task.save(function(err, data) {
           if (err) {
             self.respond({params: params, success: false, errors: err}, {format: 'json'});
@@ -130,6 +163,15 @@ var Tasks = function () {
             } else {
               task.dueDate = params.dueDate;
               
+              var interval = later.parse.text(params.repeat);
+              
+              if (interval && interval.schedules.length > 0) {
+                // Add first repeat of task
+                task.repeat = params.repeat;
+              } else {
+                task.repeat = false;
+              }
+              
               task.save(function(err, data) {
                 if (err) {
                   self.respond({params: params, success: false, errors: err}, {format: 'json'});
@@ -143,6 +185,20 @@ var Tasks = function () {
       });
     } else {
       self.respond({params: params, success: false, error: 'Invalid parameters.'}, {format: 'json'});
+    }
+  };
+  
+  this.checkInterval = function (req, resp, params) {
+    var self = this;
+    var interval = later.parse.text(params.repeat)
+    
+    console.log('Checking interval.');
+    console.log(interval);
+    
+    if (interval && interval.schedules.length > 0 && interval.error === -1) {
+      self.respond({params: params, success: true}, {format: 'json'});
+    } else {
+      self.respond({params: params, success: false, error: 'Invalid interval.'}, {format: 'json'});
     }
   };
 

@@ -133,7 +133,7 @@ var addGroupListeners = function(userList, socket, userAvatars) {
       , assignedUsers
       , '  <span class="input-group-btn">'
       , '    <button class="edit-task btn btn-default" type="button"><i class="icon-edit"></i></button>'
-      , '    <button data-toggle="modal" href="#due-date-modal" class="set-due-date btn btn-default" data-due-date="' + dueDate + '"><i class="icon-calendar"></i></button>'
+      , '    <button data-toggle="modal" href="#due-date-modal" class="set-due-date btn btn-default" data-due-date="' + dueDate + '" data-repeat="' + task.repeat + '"><i class="icon-calendar"></i></button>'
       , '    <button data-toggle="modal" href="#assign-modal" class="task-actions btn btn-default"><i class="icon-share"></i></button>'
       , '    <button class="done-editing btn btn-success" style="display:none" type="button"><i class="icon-check"></i></button>'
       , '    <button class="delete-task btn btn-danger" style="display:none" type="button"><i class="icon-remove-circle"></i></button>'
@@ -319,6 +319,21 @@ var addGroupListeners = function(userList, socket, userAvatars) {
     var taskId = $(this).closest('.input-group').attr('id');
     var id = getTaskIdFromElementId(taskId);
     var dueDate = $(this).attr('data-due-date');
+    var interval = $(this).attr('data-repeat');
+    $('#repeat-errors').html('');
+    
+    $('#repeat-input-group .input-group').removeClass('has-error');
+    $('#repeat-input-group .input-group').removeClass('has-success');
+    
+    if (interval && interval !== 'undefined' && interval !== '' && interval !== 'false') {
+      $('#repeat-interval').val(interval);
+      $('#repeat-input-group').show();
+      $('#repeat-task').prop('checked', true);
+    } else {
+      $('#repeat-interval').val('');
+      $('#repeat-input-group').hide();
+      $('#repeat-task').prop('checked', false);
+    }
     
     if (dueDate) {
       $('#due-date-picker input').val(dueDate);
@@ -334,11 +349,16 @@ var addGroupListeners = function(userList, socket, userAvatars) {
   $(".container").on("click", "#submit-due-date", function(event){
     var id = $('#due-date-task-id').val();
     var dueDate = $('#due-date-picker input').val();
+    var interval = false;
+    
+    if ($('#repeat-task').is(':checked')) {
+      interval = $('#repeat-interval').val();
+    }
     
     $.ajax({
         url: '/tasks/' + id + '/set-date',
         type: 'PUT',
-        data: { dueDate: dueDate},
+        data: { dueDate: dueDate, repeat: interval},
         success: function(result) {
             if (result.success) {
               $('#due-date-modal').modal('hide');
@@ -349,6 +369,32 @@ var addGroupListeners = function(userList, socket, userAvatars) {
         }
     });
   });
+  
+  // Add event to hide/show repeat input
+  $('#repeat-task').on('change', function(e) {
+    $('#repeat-input-group').toggle();
+  });
+  
+  // Add event to verify repeat input
+  $('#repeat-interval').on('change', function(e) {
+    var interval = $(this).val();
+    
+    $.ajax({
+        url: '/tasks/check-interval',
+        type: 'GET',
+        data: { repeat: interval},
+        success: function(result) {
+            if (result.success) {
+              $('#repeat-input-group .input-group').removeClass('has-error');
+              $('#repeat-input-group .input-group').addClass('has-success');
+            } else {
+              $('#repeat-input-group .input-group').removeClass('has-success');
+              $('#repeat-input-group .input-group').addClass('has-error');
+            }
+        }
+    });
+  });
+  
   // Add event on close of due date modal
   $('#due-date-modal').on('hide.bs.modal', function () {
     $('#due-date-errors').html('');
